@@ -55,10 +55,6 @@ export function SigninForm() {
     }
   }, [email, password]);
 
-  //   console.log("error : ", error);
-  //   console.log("email : ", email);
-  //   console.log("password : ", password);
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
