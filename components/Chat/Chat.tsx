@@ -24,6 +24,7 @@ const Chat = () => {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -47,6 +48,12 @@ const Chat = () => {
 
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput("");
+
+    console.log(textareaRef.current);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "40px";
+    }
+
     setIsTyping(true);
 
     const typingMessage: Message = {
@@ -142,10 +149,10 @@ const Chat = () => {
                       )}
                     </div>
                     <p
-                      className={`text-sm px-4 py-2 ${
+                      className={`text-sm px-4 py-2 break-words ${
                         msg.role === "user"
-                          ? "bg-[#222] text-white rounded-xl rounded-tr-none text-center"
-                          : "bg-[#F5F5FA] text-gray-900 text-center rounded-xl rounded-tl-none"
+                          ? "bg-[#222] text-white rounded-xl rounded-tr-none text-left"
+                          : "bg-[#F5F5FA] text-gray-900 text-left rounded-xl rounded-tl-none"
                       } ${msg.isTyping ? "animate-pulse" : ""}`}
                     >
                       {msg.content}
@@ -181,32 +188,40 @@ const Chat = () => {
           transition={{ duration: 1.5 }}
           className="sticky bottom-0 bg-[#F6F6F6] p-4 flex rounded-2xl shadow-[0px_2px_8px_rgba(34,34,34,0.2),_0px_4px_12px_rgba(34,34,34,0.1)]"
         >
-          <input
-            type="text"
+          <textarea
+            spellCheck="false"
+            autoCorrect="off"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            ref={textareaRef}
+            onChange={(e) => {
+              setInput(e.target.value);
+              e.target.style.height = "40px";
+              e.target.style.height = `${Math.min(
+                e.target.scrollHeight,
+                150
+              )}px`;
+            }}
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            placeholder="Type to add your message"
-            className="flex-1 text-xs font-bold p-3 text-[#8083A3] bg-transparent focus:outline-none"
+            placeholder="Type to add your message..."
+            className="flex-1 flex items-center pt-[12px] text-xs font-bold justify-center align-center text-[#8083A3] bg-transparent focus:outline-none resize-none overflow-y-auto max-h-[150px] min-h-[40px]"
           />
-
-          <button className="p-2 text-gray-500 hover:text-black">
+          <button className="p-2 text-gray-500 hover:text-black max-h-[40px]">
             <Microphone size={24} />
           </button>
 
-          <button className="p-2 text-gray-500 hover:text-black">
+          <button className="p-2 text-gray-500 hover:text-black max-h-[40px]">
             <Plus size={24} />
           </button>
 
           {input.trim() ? (
             <button
               onClick={sendMessage}
-              className="ml-2 p-2 text-white rounded-lg bg-black transition flex items-center justify-center hover:bg-slate-700"
+              className="ml-2 p-2 text-white rounded-lg bg-black transition flex items-center justify-center hover:bg-slate-700 max-h-[40px]"
             >
               <PaperPlane size={24} />
             </button>
           ) : (
-            <button className="ml-2 p-2 text-white rounded-lg bg-black transition flex items-center justify-center hover:bg-slate-700">
+            <button className="ml-2 p-2 text-white rounded-lg bg-black transition flex items-center justify-center hover:bg-slate-700 max-h-[40px]">
               <Waveform size={24} />
             </button>
           )}
