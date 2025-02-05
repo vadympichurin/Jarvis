@@ -180,9 +180,9 @@ const Chat = () => {
                   } mb-4`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#FAFAFA] mr-2">
-                      <Image className={"h-10 w-10"} alt="Jarvis" src={Robot} />
-                    </div>
+                    // <div className=" flex items-center justify-center rounded-full bg-[#FAFAFA] ">
+                    <Image className={"h-10 w-10"} alt="Jarvis" src={Robot} />
+                    // </div>
                   )}
 
                   <div className={`max-w-[75%] rounded-lg`}>
