@@ -19,6 +19,7 @@ type Message = {
   isTyping?: boolean;
 };
 
+
 const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -64,19 +65,10 @@ const Chat = () => {
     setMessages((prevMessages) => [...prevMessages, typingMessage]);
 
     try {
-      const response = await axios.post(
-        "https://msg-global-solutions-deutschland-gmbh-msgbuild-os73gm1h58dc8842.cfapps.eu10-004.hana.ondemand.com/odata/v4/ai/aiProxy",
-        {
-          prompt: input,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.API_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-     console.log(response)
+      const response = await axios.post('/api/chat', {
+        prompt: input
+      });
+
       const botMessage: Message = {
         role: "assistant",
         content: response.data.response,

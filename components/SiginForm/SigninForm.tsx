@@ -24,8 +24,6 @@ export function SigninForm() {
   const {
     register,
     handleSubmit,
-    trigger,
-    setValue,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -38,8 +36,7 @@ export function SigninForm() {
     setPassword(e.target.value);
   };
 
-  const onSubmit = async (data: FormData) => {
-    console.log("submit data : ", data);
+  const onSubmit = async (data: FormData) => {;
 
     if (USER_EMAIL === data.mail) {
       redirect("/");

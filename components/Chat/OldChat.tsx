@@ -73,7 +73,7 @@ const Chat = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    console.log(input);
+
 
     const timestamp = new Date().toLocaleTimeString([], {
       hour: "2-digit",
