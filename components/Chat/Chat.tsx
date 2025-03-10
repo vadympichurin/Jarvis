@@ -6,10 +6,13 @@ import { PaperPlane, Microphone, Plus } from "phosphor-react";
 import { Waveform } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
+import AuthService from "../../app/services/authService";
+
 import Image from "next/image";
 import Robot from "../../public/robot.svg";
 import HelloImage from "../../public/hello.svg";
 import Batman from "../../public/batman.svg";
+
 
 type Message = {
   role: "user" | "assistant";
@@ -26,14 +29,31 @@ const Chat = () => {
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [isTokenInitialized, setIsTokenInitialized] = useState(false);
+
+
+  useEffect(() => {
+    const initToken = async () => {
+      try {
+        await AuthService.initializeToken();
+        setIsTokenInitialized(true);
+      } catch (error) {
+        console.error("Failed to initialize token:", error);
+      }
+    };
+    initToken();
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
 
+
+  const sendMessage = async () => {
+
+    
+    if (!input.trim() || !isTokenInitialized) return;
     const timestamp = new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
@@ -65,10 +85,19 @@ const Chat = () => {
     setMessages((prevMessages) => [...prevMessages, typingMessage]);
 
     try {
+      
+        const token = AuthService.getToken();
+      if (!token) {
+        throw new Error('No token available');
+      }
+
       const response = await axios.post('/api/chat', {
         prompt: input
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token.accessToken}`
+        }
       });
-
       const botMessage: Message = {
         role: "assistant",
         content: response.data.response,
